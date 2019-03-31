@@ -1,0 +1,16 @@
+version: '2'
+services:
+  app:
+    image: go-tools
+    ports:
+      - 7000:80
+    volumes:
+      - ./:/go/src/app/
+    working_dir: /go/src/app/
+    command: go run main.go
+  dep:
+    image: go-tools
+    volumes:
+    - ./:/go/src/app
+    working_dir: /go/src/app
+    command: dep ensure -v

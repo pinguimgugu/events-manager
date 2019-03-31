@@ -1,0 +1,1 @@
+# Service to events manager allow work an architecture publisher/subscriber
