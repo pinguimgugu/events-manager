@@ -41,6 +41,12 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/streadway/amqp"
+  packages = ["."]
+  revision = "14f78b41ce6da3d698c2ef2cc8c0ea7ce9e26688"
+
+[[projects]]
+  branch = "master"
   name = "github.com/valyala/bytebufferpool"
   packages = ["."]
   revision = "e746df99fe4a3986f4d4f79e13c1e0117ce9c2f7"
@@ -69,6 +75,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "375041d9a2ab28087caac7ec00c0eaaa800862a891cd7270ea5abe233c14a5fc"
+  inputs-digest = "54d95735e92d97df006d48d81c8c0aefc65a7b30d555d14d6069d77cf3c40b5a"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -13,6 +13,8 @@ function serve {
 }
 
 function run {
+    docker-compose -f docker-compose-dev.yml up -d rabbitmq
+    sleep 6
     docker-compose -f docker-compose-dev.yml up app
 }
 

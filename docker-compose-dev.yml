@@ -5,12 +5,17 @@ services:
     ports:
       - 7000:80
     volumes:
-      - ./:/go/src/app/
-    working_dir: /go/src/app/
+      - ./:/go/src/github.com/events-manager/
+    working_dir: /go/src/github.com/events-manager/
     command: go run main.go
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - 15672:15672
+      - 5672:5672
   dep:
     image: go-tools
     volumes:
-    - ./:/go/src/app
-    working_dir: /go/src/app
+    - ./:/go/src/github.com/events-manager/
+    working_dir: /go/src/github.com/events-manager/
     command: dep ensure -v
