@@ -1,17 +1,31 @@
 package factory
 
-import(
+import (
+	"fmt"
+	"time"
+
 	"github.com/streadway/amqp"
-	"sync"
 )
 
 func GetRabbitConnection() *amqp.Connection {
-	var once sync.Once
-	var rabbitConn *amqp.Connection
+	chErr := make(chan *amqp.Error)
+	conn := make(chan *amqp.Connection)
+	go func() {
+		for {
+			rabbitConn, err := amqp.Dial("amqp://guest:guest@rabbitmq:5672/")
 
-	once.Do(func() {
-		rabbitConn, _ = amqp.Dial("amqp://guest:guest@rabbitmq:5672/")
-	})
-	
-	return rabbitConn
+			if err != nil {
+				continue
+			}
+
+			conn <- rabbitConn
+
+			rabbitConn.NotifyClose(chErr)
+			<-chErr
+			fmt.Println("reconnect to rabbit ...")
+			time.Sleep(time.Second * 1)
+		}
+	}()
+
+	return <-conn
 }

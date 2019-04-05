@@ -48,7 +48,57 @@ func (e *Events) Create(eventEnvelop *entity.EventEnvelop) error {
 		return errors.New("error to publisher event")
 	}
 
-	fmt.Println("Event published", string(body))
-
 	return nil
+}
+
+func (e *Events) CreateStreaming(eventStreaming *entity.EventStreaming) chan *entity.EventEnvelop {
+	ch, _ := e.conn.Channel()
+
+	ch.ExchangeDeclare(
+		eventStreaming.EventName, // name
+		"fanout",                 // type
+		true,                     // durable
+		false,                    // auto-deleted
+		false,                    // internal
+		false,                    // no-wait
+		nil,                      // arguments
+	)
+
+	q, _ := ch.QueueDeclare(
+		eventStreaming.ConsumerName, // name
+		true,  // durable
+		false, // delete when usused
+		true,  // exclusive
+		false, // no-wait
+		nil,   // arguments
+	)
+
+	ch.QueueBind(
+		q.Name, // queue name
+		"",     // routing key
+		eventStreaming.EventName, // exchange
+		false,
+		nil)
+
+	msg, _ := ch.Consume(
+		q.Name, // queue
+		"",     // consumer
+		true,   // auto-ack
+		false,  // exclusive
+		false,  // no-local
+		false,  // no-wait
+		nil,    // args
+	)
+
+	chanEvent := make(chan *entity.EventEnvelop)
+
+	go func() {
+		for content := range msg {
+			marshedMsg := &entity.EventEnvelop{}
+			json.Unmarshal(content.Body, &marshedMsg)
+			chanEvent <- marshedMsg
+		}
+	}()
+
+	return chanEvent
 }

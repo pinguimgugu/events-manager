@@ -1,9 +1,6 @@
 package routes
 
 import (
-	"fmt"
-	"time"
-
 	"github.com/events-manager/application/resource"
 	"github.com/events-manager/domain/contract"
 
@@ -32,15 +29,11 @@ func (e *Events) Handler() {
 		return action.Handler(c)
 	})
 
-	e.echo.GET("/events/v1/streaming/:event_name/:consumer_name/", func(c echo.Context) error {
-		fmt.Println(c.Param("event_name"))
-		for {
-			c.Response().Header().Set("Content-type", "application/json")
-			c.Response().Write([]byte("{\"teste\":\"viado\"}\n"))
-			c.Response().Flush()
-			<-time.After(time.Second * 4)
+	e.echo.POST("/events/v1/streaming/", func(c echo.Context) error {
+		action := &resource.EventsStreamingPost{
+			EventsRepository: e.EventsRepository,
 		}
 
-		return nil
+		return action.Handler(c)
 	})
 }
