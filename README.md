@@ -12,7 +12,7 @@
 # getting up external services and running application
     ./application.sh serve
 
-# running application
+# running only application
     ./application.sh run
 
 
