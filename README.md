@@ -12,7 +12,7 @@
 # getting up external services and running application
     ./application.sh serve
 
-# running application
+# running only application
     ./application.sh run
 
 
@@ -33,6 +33,7 @@ Consumer two
     -H "Content-Type: application/json" \
     -d '{"consumer_name": "app-consumer-two", "event_name": "sample"}'
 ```
+<<<<<<< HEAD
 
 Create event sample
 ```
@@ -41,3 +42,5 @@ Create event sample
     -H 'Content-Type: application/json' \
     -d '{"name":"sample", "metadata": {"content": {"my_event_id": 1, "my_event_data":"test"}}}' 
 ```
+=======
+>>>>>>> 7e13448457c65720614d1ac638ab50745fb375b0
