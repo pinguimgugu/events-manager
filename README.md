@@ -16,15 +16,7 @@
     ./application.sh run
 
 
-Use example:
-
-Create event
-```
-    curl -X POST \
-    http://localhost:7000/events/v1/events/ \
-    -H 'Content-Type: application/json' \
-    -d '{"name":"sample", "metadata": {"content": {"my_event_id": 1, "my_event_data":"test"}}}' 
-```
+Listen events sample
 
 Consumer one
 ```
@@ -40,4 +32,12 @@ Consumer two
     http://localhost:7000/events/v1/streaming/ \
     -H "Content-Type: application/json" \
     -d '{"consumer_name": "app-consumer-two", "event_name": "sample"}'
+```
+
+Create event sample
+```
+    curl -X POST \
+    http://localhost:7000/events/v1/events/ \
+    -H 'Content-Type: application/json' \
+    -d '{"name":"sample", "metadata": {"content": {"my_event_id": 1, "my_event_data":"test"}}}' 
 ```
