@@ -51,7 +51,7 @@ func (e *Events) Create(eventEnvelop *entity.EventEnvelop) error {
 	return nil
 }
 
-func (e *Events) CreateStreaming(eventStreaming *entity.EventStreaming) chan *entity.EventEnvelop {
+func (e *Events) CreateStreaming(eventStreaming *entity.EventStreaming, interruptStrem chan bool) chan *entity.EventEnvelop {
 	ch, _ := e.conn.Channel()
 
 	ch.ExchangeDeclare(
@@ -66,7 +66,7 @@ func (e *Events) CreateStreaming(eventStreaming *entity.EventStreaming) chan *en
 
 	q, _ := ch.QueueDeclare(
 		eventStreaming.ConsumerName, // name
-		true,  // durable
+		false, // durable
 		false, // delete when usused
 		true,  // exclusive
 		false, // no-wait
@@ -98,6 +98,11 @@ func (e *Events) CreateStreaming(eventStreaming *entity.EventStreaming) chan *en
 			json.Unmarshal(content.Body, &marshedMsg)
 			chanEvent <- marshedMsg
 		}
+	}()
+
+	go func() {
+		<-interruptStrem
+		ch.Close()
 	}()
 
 	return chanEvent

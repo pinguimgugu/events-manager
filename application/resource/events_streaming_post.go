@@ -24,7 +24,15 @@ func (e *EventsStreamingPost) Handler(c echo.Context) error {
 		})
 	}
 
-	events := e.EventsRepository.CreateStreaming(eventStreaming)
+	interruptStream := make(chan bool)
+
+	go func(interruptStream chan bool) {
+		if <-c.Response().CloseNotify() {
+			interruptStream <- true
+		}
+	}(interruptStream)
+
+	events := e.EventsRepository.CreateStreaming(eventStreaming, interruptStream)
 	for content := range events {
 		eventJson, _ := json.Marshal(content)
 		c.Response().Header().Set("Content-type", "application/json")
