@@ -70,7 +70,9 @@ func (e *Events) CreateStreaming(eventStreaming *entity.EventStreaming, interrup
 		false, // delete when usused
 		true,  // exclusive
 		false, // no-wait
-		nil,   // arguments
+		map[string]interface{}{
+			"x-expires": 86400000,
+		}, // arguments
 	)
 
 	ch.QueueBind(
